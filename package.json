@@ -1,0 +1,26 @@
+{
+	"name": "agrisoft-cloud-function",
+	"version": "1.0.0",
+	"main": "lib/index.js",
+	"scripts": {
+		"build": "tsc",
+		"gcp-build": "npm run build",
+		"start": "functions-framework --target=processCoordinates",
+		"deploy": "gcloud functions deploy process-coordinates --gen2 --region=us-central1 --runtime=nodejs20 --source=. --entry-point=processCoordinates --trigger-http --allow-unauthenticated --timeout=300s --memory=512MB",
+		"check-iam": "gcloud iam roles describe custom_storage_read_write --project=examen-cloud-function-raphael && gcloud storage buckets get-iam-policy gs://exercicee",
+    	"check-result": "curl -s -o /dev/null -w 'HTTP Status: %{http_code}\n' -X POST $(gcloud functions describe process-coordinates --format='value(httpsTrigger.url)') && (gcloud storage ls gs://exercicee/resultat.csv && echo '\n✅ Verification passed') || echo '\n❌ Verification failed'"
+	},
+	"dependencies": {
+		"@google-cloud/functions-framework": "^3.4.6",
+		"@google-cloud/storage": "^7.15.2",
+		"@turf/turf": "^7.2.0",
+		"csv-writer": "^1.6.0",
+		"papaparse": "^5.5.2"
+	},
+	"packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
+	"devDependencies": {
+		"@types/express": "^5.0.1",
+		"@types/node": "^22.13.14",
+		"typescript": "^5.8.2"
+	}
+}
