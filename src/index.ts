@@ -87,7 +87,7 @@ export async function processCoordinates(req: any, res: any) {
       throw new Error('No valid GeoJSON features found');
     }
 
-    // Optimize: Create a spatial index or use more efficient search
+    //Create a spatial index
     const csvRows = coordinates.flatMap(coord => {
       const point = turf.point([coord.Longitude, coord.Latitude]);
       
